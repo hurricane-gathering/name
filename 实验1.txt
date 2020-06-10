@@ -1,0 +1,33 @@
+DATA SEGMENT
+    D1 DB 1H, 2H, 3H
+    D2 DB 4H, 5H, 6H        ;定义数据
+    SUM DB 4 dup(0)
+DATA ENDS
+
+STACK SEGMENT 'STACK'
+    DB 10 DUP(0)
+STACK ENDS
+
+CODE SEGMENT
+    ASSUME CS: CODE, DS: DATA  ;说明代码段、数据段
+START: MOV AX, DATA
+       MOV DS, AX
+       LEA DI, D1
+       MOV DL, [DI]
+       MOV DH, [DI+1]
+       MOV BL, [DI+2]  ;存放被加数
+       LEA DI, D2
+       ADD DL, [DI]
+       ADC DH, [DI+1]
+       ADC BL, [DI+2]
+       MOV AL, 0
+       ADC AL, 0       ;进行加法运算
+       LEA DI, SUM
+       MOV [DI], DL
+       MOV [DI+1], DH
+       MOV [DI+2], BL
+       MOV [DI+3], AL  ;返回和到SUM
+       MOV AH, 4CH
+       INT 21H
+CODE ENDS
+     END START
